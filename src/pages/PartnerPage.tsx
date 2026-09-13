@@ -1,47 +1,21 @@
 import { useParams } from 'react-router-dom'
-import type { Partner } from '../features/partners/types'
-import { useEffect, useState } from 'react'
-import { getPartnerBySlug } from '../lib/api/api-partners'
 import { PageLayout } from '../components/layout/PageLayout'
+import { usePartner } from '../hooks/usePartner'
+import { PartnerSkeleton } from '../features/partners/components/PartnerSkeleton'
+import { ErrorState } from '../components/ui/ErrorState'
 
 export function PartnerPage() {
   const { slug } = useParams<{ slug: string }>()
 
-  const [partner, setPartner] = useState<Partner | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-
-  useEffect(() => {
-    if (!slug) {
-      return
-    }
-    async function loadPartners(partnerSlug: string) {
-      try {
-        setIsLoading(true)
-        setError(null)
-        setPartner(null)
-
-        const data = await getPartnerBySlug(partnerSlug)
-
-        setPartner(data)
-      } catch (error) {
-        setError(
-          error instanceof Error ? error.message : 'Something went wrong',
-        )
-      } finally {
-        setIsLoading(false)
-      }
-    }
-    loadPartners(slug)
-  }, [slug])
+  const { data: partner, isLoading, error, retry } = usePartner(slug)
 
   return (
     <PageLayout>
       <section className="container-page py-16">
         {isLoading ? (
-          <p>Loading...</p>
+          <PartnerSkeleton />
         ) : error ? (
-          <p>{error}</p>
+          <ErrorState onRetry={retry} />
         ) : partner ? (
           <>
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary">
