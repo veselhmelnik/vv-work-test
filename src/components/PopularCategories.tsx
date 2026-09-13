@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { jobCategories } from '../mocks/categories'
+import { jobCategories } from '../mocks/mock-categories'
 
 export function PopularCategories() {
   return (

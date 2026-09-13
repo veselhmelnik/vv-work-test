@@ -1,5 +1,5 @@
 import { VacancyCard } from '../features/vacancies/components/VacancyCard'
-import { heroVacancies } from '../mocks/hero-vacancies'
+import { heroVacancies } from '../mocks/mock-hero-vacancies'
 import { Button } from './ui/Button'
 
 export function Hero() {
