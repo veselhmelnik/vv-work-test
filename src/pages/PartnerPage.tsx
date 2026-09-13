@@ -1,3 +1,3 @@
-export default function PartnerPage() {
+export function PartnerPage() {
   return <main>Partner</main>;
 }
