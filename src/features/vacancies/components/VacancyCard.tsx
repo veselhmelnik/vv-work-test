@@ -4,18 +4,20 @@ type VacancyCardProps = {
   vacancy: Vacancy
   compact?: boolean
   onApply?: () => void
+  actionLabel?: string
 }
 
 export function VacancyCard({
   vacancy,
   compact = false,
   onApply,
+  actionLabel,
 }: VacancyCardProps) {
   const isInteractive = Boolean(onApply && !compact)
 
   return (
     <article
-      className={`relative rounded-2xl border border-border bg-surface transition-[transform,box-shadow,border-color] duration-200 ${
+      className={`relative rounded-2xl border border-border bg-surface transition-[transform, box-shadow, border-color] duration-200 ${
         isInteractive
           ? 'hover:-translate-y-1 hover:border-primary/20 hover:shadow-lg'
           : ''
@@ -57,20 +59,21 @@ export function VacancyCard({
 
         <div className="mt-6 flex items-end justify-between gap-4">
           <div>
-            <p className="font-semibold text-foreground">
-              {vacancy.salary}
-            </p>
+            <p className="font-semibold text-foreground">{vacancy.salary}</p>
 
-            <p className="mt-1 text-sm text-muted">
-              {vacancy.employmentType}
-            </p>
+            <p className="mt-1 text-sm text-muted">{vacancy.employmentType}</p>
           </div>
 
-          {!compact && (
-            <span className="text-sm font-medium text-primary">
-              Подати заявку →
-            </span>
-          )}
+          {!compact &&
+            (onApply ? (
+              <span className="text-sm font-medium text-primary">
+                Подати заявку →
+              </span>
+            ) : actionLabel ? (
+              <span className="text-sm font-medium text-primary">
+                {actionLabel} →
+              </span>
+            ) : null)}
         </div>
       </div>
     </article>

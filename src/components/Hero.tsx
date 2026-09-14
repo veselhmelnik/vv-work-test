@@ -121,8 +121,29 @@ export function Hero() {
         </div>
         <div className="relative">
           <div className="grid gap-4 lg:hidden">
-            <VacancyCard vacancy={heroVacancies[0]} />
-            <VacancyCard vacancy={heroVacancies[1]} compact />
+            <Link
+              to={`/vacancies?search=${encodeURIComponent(
+                heroVacancies[0].title,
+              )}`}
+              
+            >
+              <VacancyCard
+                vacancy={heroVacancies[0]}
+                actionLabel="Переглянути"
+              />
+            </Link>
+            <Link
+              to={`/vacancies?search=${encodeURIComponent(
+                heroVacancies[1].title,
+              )}`}
+             
+            >
+              <VacancyCard
+                vacancy={heroVacancies[1]}
+                compact
+                actionLabel="Переглянути"
+              />
+            </Link>
           </div>
 
           <div className="relative hidden min-h-107.5 lg:block">
@@ -132,7 +153,10 @@ export function Hero() {
               )}`}
               className="cursor-pointer absolute left-0 top-0 z-30 w-[88%] hover:z-40"
             >
-              <VacancyCard vacancy={heroVacancies[0]} />
+              <VacancyCard
+                vacancy={heroVacancies[0]}
+                actionLabel="Переглянути"
+              />
             </Link>
 
             <Link
@@ -141,7 +165,11 @@ export function Hero() {
               )}`}
               className="cursor-pointer absolute bottom-0 left-12 z-10 w-[68%] hover:z-40"
             >
-              <VacancyCard vacancy={heroVacancies[2]} compact />
+              <VacancyCard
+                vacancy={heroVacancies[2]}
+                compact
+                actionLabel="Переглянути"
+              />
             </Link>
 
             <Link
@@ -150,7 +178,11 @@ export function Hero() {
               )}`}
               className="cursor-pointer absolute bottom-5 right-0 z-20 w-[68%] hover:z-40"
             >
-              <VacancyCard vacancy={heroVacancies[1]} compact />
+              <VacancyCard
+                vacancy={heroVacancies[1]}
+                compact
+                actionLabel="Переглянути"
+              />
             </Link>
           </div>
         </div>

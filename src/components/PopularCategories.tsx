@@ -22,7 +22,7 @@ export function PopularCategories() {
         {jobCategories.map((category) => (
           <Link
             key={category.value}
-            to={`/partners/${category.partnerSlug}?category=${category.value}`}
+            to={`/vacancies?category=${category.value}`}
             className="group rounded-2xl border border-border bg-surface p-5 transition-[transform, border-color, box-shadow] duration-200 hover:-translate-y-1 hover:border-primary/20 hover:shadow-lg"
           >
             <div className="flex items-center justify-between gap-4">
