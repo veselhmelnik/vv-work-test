@@ -37,7 +37,7 @@ export function Hero() {
   }
 
   return (
-    <section className="container-page py-8 md:py-16 lg:py-20">
+    <section id="vacancies" className="container-page py-8 md:py-16 lg:py-20">
       <div className="grid items-center gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
         <div>
           <p className="mb-4 text-sm font-semibold uppercase tracking-[0.18em] text-primary">

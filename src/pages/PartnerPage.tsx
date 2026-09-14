@@ -59,7 +59,7 @@ export function PartnerPage() {
 
   return (
     <PageLayout>
-      <section className="container-page py-16">
+      <section id='partners' className="container-page py-16">
         {isLoading ? (
           <PartnerSkeleton />
         ) : error ? (

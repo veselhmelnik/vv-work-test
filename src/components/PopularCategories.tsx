@@ -3,7 +3,7 @@ import { jobCategories } from '../mocks/mock-categories'
 
 export function PopularCategories() {
   return (
-    <section className="container-page py-8 md:py-16 lg:py-20">
+    <section id="categories" className="container-page py-8 md:py-16 lg:py-20">
       <div className="max-w-2xl">
         <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary">
           Популярні напрямки
