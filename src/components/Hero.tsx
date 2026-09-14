@@ -2,38 +2,30 @@ import { useState } from 'react'
 import { VacancyCard } from '../features/vacancies/components/VacancyCard'
 import { heroVacancies } from '../mocks/mock-hero-vacancies'
 import { Button } from './ui/Button'
-import {
-  getAllVacancies,
-  type VacancyWithPartner,
-} from '../features/vacancies/getAllVacancies'
 import { jobCategories } from '../mocks/mock-categories'
-import { ApplicationModal } from '../features/application/components/ApplicationModal'
+import { Link, useNavigate } from 'react-router-dom'
 
 export function Hero() {
   const [search, setSearch] = useState('')
   const [category, setCategory] = useState('')
-  const [results, setResults] = useState<VacancyWithPartner[]>([])
-  const [hasSearched, setHasSearched] = useState(false)
-  const [selectedVacancy, setSelectedVacancy] =
-    useState<VacancyWithPartner | null>(null)
+  const navigate = useNavigate()
 
   function handleSearch(event: React.SubmitEvent<HTMLFormElement>) {
     event.preventDefault()
 
-    const normalizedSearch = search.trim().toLowerCase()
+    const params = new URLSearchParams()
 
-    const nextResults = getAllVacancies().filter((vacancy) => {
-      const matchesSearch =
-        normalizedSearch === '' ||
-        vacancy.title.toLowerCase().includes(normalizedSearch)
+    const normalizedSearch = search.trim()
 
-      const matchesCategory = category === '' || vacancy.category === category
+    if (normalizedSearch) {
+      params.set('search', normalizedSearch)
+    }
 
-      return matchesSearch && matchesCategory
-    })
+    if (category) {
+      params.set('category', category)
+    }
 
-    setResults(nextResults)
-    setHasSearched(true)
+    navigate(`/vacancies?${params.toString()}`)
   }
 
   return (
@@ -134,63 +126,35 @@ export function Hero() {
           </div>
 
           <div className="relative hidden min-h-107.5 lg:block">
-            <div className="cursor-pointer absolute left-0 top-0 z-30 w-[88%] hover:z-40">
+            <Link
+              to={`/vacancies?search=${encodeURIComponent(
+                heroVacancies[0].title,
+              )}`}
+              className="cursor-pointer absolute left-0 top-0 z-30 w-[88%] hover:z-40"
+            >
               <VacancyCard vacancy={heroVacancies[0]} />
-            </div>
+            </Link>
 
-            <div className="cursor-pointer absolute bottom-0 left-12 z-10 w-[68%] hover:z-40">
+            <Link
+              to={`/vacancies?search=${encodeURIComponent(
+                heroVacancies[2].title,
+              )}`}
+              className="cursor-pointer absolute bottom-0 left-12 z-10 w-[68%] hover:z-40"
+            >
               <VacancyCard vacancy={heroVacancies[2]} compact />
-            </div>
+            </Link>
 
-            <div className="cursor-pointer absolute bottom-5 right-0 z-20 w-[68%] hover:z-40">
+            <Link
+              to={`/vacancies?search=${encodeURIComponent(
+                heroVacancies[1].title,
+              )}`}
+              className="cursor-pointer absolute bottom-5 right-0 z-20 w-[68%] hover:z-40"
+            >
               <VacancyCard vacancy={heroVacancies[1]} compact />
-            </div>
+            </Link>
           </div>
         </div>
       </div>
-      {hasSearched && (
-        <div className="mt-16 border-t border-border pt-10">
-          <div className="flex items-end justify-between gap-4">
-            <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary">
-                Результати пошуку
-              </p>
-
-              <h2 className="mt-2 text-2xl font-bold">Знайдені вакансії</h2>
-            </div>
-
-            <span className="text-sm text-muted">
-              {results.length} результатів
-            </span>
-          </div>
-
-          {results.length > 0 ? (
-            <div className="mt-6 grid gap-4">
-              {results.map((vacancy) => (
-                <VacancyCard
-                  key={vacancy.id}
-                  vacancy={vacancy}
-                  onApply={() => setSelectedVacancy(vacancy)}
-                />
-              ))}
-            </div>
-          ) : (
-            <div className="mt-6 rounded-2xl border border-border bg-surface p-8 text-center">
-              <h3 className="font-semibold">Вакансій не знайдено</h3>
-
-              <p className="mt-2 text-muted">
-                Спробуйте змінити пошуковий запит або категорію.
-              </p>
-            </div>
-          )}
-        </div>
-      )}
-      {selectedVacancy && (
-        <ApplicationModal
-          vacancy={selectedVacancy}
-          onClose={() => setSelectedVacancy(null)}
-        />
-      )}
     </section>
   )
 }
