@@ -1,23 +1,33 @@
 import type { Vacancy } from '../types'
 
-type VacancyCarpProps = {
+type VacancyCardProps = {
   vacancy: Vacancy
   compact?: boolean
+  onApply?: () => void
 }
 
-export function VacancyCard({ vacancy, compact = false }: VacancyCarpProps) {
+export function VacancyCard({
+  vacancy,
+  compact = false,
+  onApply,
+}: VacancyCardProps) {
   return (
     <article
-      className={`rounded-2xl border border-border bg-surface transition-[transform, box-shadow, border-color] duration-200 hover:-translate-y-1 hover:border-primary/20 hover:shadow-lg ${compact ? 'p-5' : 'p-6'}`}
+      className={`rounded-2xl border border-border bg-surface transition-[transform,box-shadow,border-color] duration-200 hover:-translate-y-1 hover:border-primary/20 hover:shadow-lg ${
+        compact ? 'p-5' : 'p-6'
+      }`}
     >
       <div className="flex items-start justify-between gap-4">
         <div>
-          <p className="text-sm font-medium text-primary">{vacancy.category}</p>
+          <p className="text-sm font-medium text-primary">
+            {vacancy.category}
+          </p>
 
           <h3 className="mt-2 text-xl font-semibold tracking-tight">
             {vacancy.title}
           </h3>
         </div>
+
         <span className="rounded-full bg-surface-soft px-3 py-1">
           {vacancy.country}
         </span>
@@ -32,14 +42,23 @@ export function VacancyCard({ vacancy, compact = false }: VacancyCarpProps) {
 
       <div className="mt-6 flex items-end justify-between gap-4">
         <div>
-          <p className="font-semibold text-foreground">{vacancy.salary}</p>
-          <p className="mt-1 text-sm text-muted">{vacancy.employmentType}</p>
+          <p className="font-semibold text-foreground">
+            {vacancy.salary}
+          </p>
+
+          <p className="mt-1 text-sm text-muted">
+            {vacancy.employmentType}
+          </p>
         </div>
 
-        {!compact && (
-          <span className="text-sm font-medium text-primary">
-            Переглянути →
-          </span>
+        {!compact && onApply && (
+          <button
+            type="button"
+            onClick={onApply}
+            className="cursor-pointer text-sm font-medium text-primary hover:text-primary-hover"
+          >
+            Подати заявку →
+          </button>
         )}
       </div>
     </article>
