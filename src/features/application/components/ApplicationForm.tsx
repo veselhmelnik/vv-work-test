@@ -12,6 +12,8 @@ const initialValues: ApplicationFormValues = {
   message: '',
 }
 
+type FormStatus = 'idle' | 'optimistic-success' | 'success' | 'error'
+
 type ApplicationFormProps = {
   vacancy: Vacancy
   titleId?: string
@@ -20,11 +22,9 @@ type ApplicationFormProps = {
 export function ApplicationForm({ vacancy, titleId }: ApplicationFormProps) {
   const [values, setValues] = useState<ApplicationFormValues>(initialValues)
 
-  const [errors, setErrors] = useState<ApplicationFormErrors>({})
+  const [status, setStatus] = useState<FormStatus>('idle')
 
-  const [status, setStatus] = useState<
-    'idle' | 'submitting' | 'success' | 'error'
-  >('idle')
+  const [errors, setErrors] = useState<ApplicationFormErrors>({})
 
   function updateField(field: keyof ApplicationFormValues, value: string) {
     setValues((current) => ({
@@ -37,7 +37,7 @@ export function ApplicationForm({ vacancy, titleId }: ApplicationFormProps) {
       [field]: undefined,
     }))
 
-    if (status === 'success' || status === 'error') {
+    if (status === 'error') {
       setStatus('idle')
     }
   }
@@ -52,7 +52,8 @@ export function ApplicationForm({ vacancy, titleId }: ApplicationFormProps) {
       return
     }
 
-    setStatus('submitting')
+    setErrors({})
+    setStatus('optimistic-success')
 
     try {
       await submitApplication({
@@ -62,22 +63,52 @@ export function ApplicationForm({ vacancy, titleId }: ApplicationFormProps) {
 
       setStatus('success')
       setValues(initialValues)
-      setErrors({})
     } catch {
       setStatus('error')
     }
   }
 
+  if (status === 'optimistic-success' || status === 'success') {
+    return (
+      <div className="p-8 text-center" role="status" aria-live="polite">
+        <div
+          className="
+            mx-auto flex size-12
+            items-center justify-center
+            rounded-full bg-primary-soft
+            text-xl text-primary
+          "
+          aria-hidden="true"
+        >
+          ✓
+        </div>
+
+        <h2 id={titleId} className="mt-5 text-2xl font-bold">
+          Заявку надіслано
+        </h2>
+
+        <p className="mt-2 text-muted">
+          Ми передали вашу заявку на вакансію{' '}
+          <span className="font-medium text-foreground">{vacancy.title}</span>.
+        </p>
+
+        {status === 'optimistic-success' && (
+          <p className="mt-3 text-sm text-muted">
+            Підтверджуємо відправлення...
+          </p>
+        )}
+      </div>
+    )
+  }
+
   return (
-    <form
-      onSubmit={handleSubmit}
-      noValidate
-      className="rounded-2xl border border-border bg-surface p-6"
-    >
+    <form onSubmit={handleSubmit} noValidate className="p-6 md:p-8">
       <div>
         <p className="text-sm font-medium text-primary">Заявка на вакансію</p>
 
-        <h2 id={titleId} className="mt-2 text-2xl font-bold">{vacancy.title}</h2>
+        <h2 id={titleId} className="mt-2 pr-12 text-2xl font-bold">
+          {vacancy.title}
+        </h2>
 
         <p className="mt-2 text-muted">
           {vacancy.company} · {vacancy.city}, {vacancy.country}
@@ -95,6 +126,7 @@ export function ApplicationForm({ vacancy, titleId }: ApplicationFormProps) {
 
           <input
             id="application-name"
+            autoFocus
             name="name"
             autoComplete="name"
             value={values.name}
@@ -207,18 +239,8 @@ export function ApplicationForm({ vacancy, titleId }: ApplicationFormProps) {
         </p>
       )}
 
-      {status === 'success' && (
-        <p className="mt-4 text-sm text-success" role="status">
-          Заявку успішно надіслано.
-        </p>
-      )}
-
-      <Button
-        type="submit"
-        className="mt-6 w-full"
-        disabled={status === 'submitting'}
-      >
-        {status === 'submitting' ? 'Надсилаємо...' : 'Надіслати заявку'}
+      <Button type="submit" className="mt-6 w-full">
+        Надіслати заявку
       </Button>
     </form>
   )

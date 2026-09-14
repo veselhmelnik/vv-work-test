@@ -7,32 +7,71 @@ type ApplicationModalProps = {
   onClose: () => void
 }
 
-export function ApplicationModal({
-  vacancy,
-  onClose,
-}: ApplicationModalProps) {
+export function ApplicationModal({ vacancy, onClose }: ApplicationModalProps) {
   const dialogRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    const previousActiveElement =
-      document.activeElement as HTMLElement | null
+    const previousActiveElement = document.activeElement as HTMLElement | null
 
-    dialogRef.current?.focus()
+    const dialog = dialogRef.current
+
+    dialog?.focus()
 
     function handleKeyDown(event: KeyboardEvent) {
       if (event.key === 'Escape') {
         onClose()
+        return
+      }
+
+      if (event.key !== 'Tab' || !dialog) {
+        return
+      }
+
+      const focusableElements = dialog.querySelectorAll<HTMLElement>(
+        `
+        button:not([disabled]),
+        input:not([disabled]),
+        textarea:not([disabled]),
+        select:not([disabled]),
+        a[href],
+        [tabindex]:not([tabindex="-1"])
+      `,
+      )
+
+      if (focusableElements.length === 0) {
+        event.preventDefault()
+        dialog.focus()
+        return
+      }
+
+      const firstElement = focusableElements[0]
+      const lastElement = focusableElements[focusableElements.length - 1]
+
+      const activeElement = document.activeElement
+
+      if (event.shiftKey && activeElement === firstElement) {
+        event.preventDefault()
+        lastElement.focus()
+        return
+      }
+
+      if (!event.shiftKey && activeElement === lastElement) {
+        event.preventDefault()
+        firstElement.focus()
       }
     }
 
     document.addEventListener('keydown', handleKeyDown)
 
-    const originalOverflow = document.body.style.overflow
+    const previousOverflow = document.body.style.overflow
+
     document.body.style.overflow = 'hidden'
 
     return () => {
       document.removeEventListener('keydown', handleKeyDown)
-      document.body.style.overflow = originalOverflow
+
+      document.body.style.overflow = previousOverflow
+
       previousActiveElement?.focus()
     }
   }, [onClose])
@@ -75,10 +114,7 @@ export function ApplicationModal({
           ×
         </button>
 
-        <ApplicationForm
-          vacancy={vacancy}
-          titleId="application-modal-title"
-        />
+        <ApplicationForm vacancy={vacancy} titleId="application-modal-title" />
       </div>
     </div>
   )
