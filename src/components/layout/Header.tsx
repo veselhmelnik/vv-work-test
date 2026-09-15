@@ -2,11 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
 
 const navItems = [
-  {
-    label: 'Роботодавцям',
-    to: '/#employers',
-    type: 'hash',
-  },
+  
   {
     label: 'Партнери',
     to: '/#partners',
@@ -15,6 +11,11 @@ const navItems = [
   {
     label: 'Про нас',
     to: '/#about',
+    type: 'hash',
+  },
+  {
+    label: 'Роботодавцям',
+    to: '/#employers',
     type: 'hash',
   },
   {
