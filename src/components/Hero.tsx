@@ -1,9 +1,8 @@
 import { useState } from 'react'
-import { VacancyCard } from '../features/vacancies/components/VacancyCard'
-import { heroVacancies } from '../mocks/mock-hero-vacancies'
 import { Button } from './ui/Button'
 import { jobCategories } from '../mocks/mock-categories'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
+import { HeroVacanciesPreview } from './HeroVacanciesPreview'
 
 export function Hero() {
   const [search, setSearch] = useState('')
@@ -119,72 +118,8 @@ export function Hero() {
             </span>
           </div>
         </div>
-        <div className="relative">
-          <div className="grid gap-4 lg:hidden">
-            <Link
-              to={`/vacancies?search=${encodeURIComponent(
-                heroVacancies[0].title,
-              )}`}
-              
-            >
-              <VacancyCard
-                vacancy={heroVacancies[0]}
-                actionLabel="Переглянути"
-              />
-            </Link>
-            <Link
-              to={`/vacancies?search=${encodeURIComponent(
-                heroVacancies[1].title,
-              )}`}
-             
-            >
-              <VacancyCard
-                vacancy={heroVacancies[1]}
-                compact
-                actionLabel="Переглянути"
-              />
-            </Link>
-          </div>
-
-          <div className="relative hidden min-h-107.5 lg:block">
-            <Link
-              to={`/vacancies?search=${encodeURIComponent(
-                heroVacancies[0].title,
-              )}`}
-              className="cursor-pointer absolute left-0 top-0 z-30 w-[88%] hover:z-40"
-            >
-              <VacancyCard
-                vacancy={heroVacancies[0]}
-                actionLabel="Переглянути"
-              />
-            </Link>
-
-            <Link
-              to={`/vacancies?search=${encodeURIComponent(
-                heroVacancies[2].title,
-              )}`}
-              className="cursor-pointer absolute bottom-0 left-12 z-10 w-[68%] hover:z-40"
-            >
-              <VacancyCard
-                vacancy={heroVacancies[2]}
-                compact
-                actionLabel="Переглянути"
-              />
-            </Link>
-
-            <Link
-              to={`/vacancies?search=${encodeURIComponent(
-                heroVacancies[1].title,
-              )}`}
-              className="cursor-pointer absolute bottom-5 right-0 z-20 w-[68%] hover:z-40"
-            >
-              <VacancyCard
-                vacancy={heroVacancies[1]}
-                compact
-                actionLabel="Переглянути"
-              />
-            </Link>
-          </div>
+        <div>
+          <HeroVacanciesPreview />
         </div>
       </div>
     </section>

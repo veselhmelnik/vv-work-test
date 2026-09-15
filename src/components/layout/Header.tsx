@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
 
 const navItems = [
-  { label: 'Знайти роботу', to: '/' },
   { label: 'Роботодавцям', to: '/#employers' },
   { label: 'Партнери', to: '/#partners' },
   { label: 'Про нас', to: '/#about' },
@@ -119,7 +118,7 @@ function VacanciesLink({
 }) {
   return (
     <Link
-      to="/#vacancies"
+      to="/vacancies"
       onClick={() => setIsMenuOpen(false)}
       className={`inline-flex h-11 items-center justify-center
                 rounded-[10px]
