@@ -24,3 +24,16 @@ export const jobCategories = [
     value: 'drivers',
   },
 ] as const
+
+export function getCategoryLabel(
+  value: JobCategory,
+) {
+  return (
+    jobCategories.find(
+      (category) => category.value === value,
+    )?.label ?? value
+  )
+}
+
+export type JobCategory =
+  (typeof jobCategories)[number]['value']

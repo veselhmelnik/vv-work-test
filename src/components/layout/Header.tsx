@@ -1,15 +1,54 @@
-import { useState } from 'react'
-import { Link, NavLink } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { Link, NavLink, useLocation } from 'react-router-dom'
 
 const navItems = [
-  { label: 'Роботодавцям', to: '/#employers' },
-  { label: 'Партнери', to: '/#partners' },
-  { label: 'Про нас', to: '/#about' },
-  { label: 'Контакти', to: '/contacts' },
-]
+  {
+    label: 'Роботодавцям',
+    to: '/#employers',
+    type: 'hash',
+  },
+  {
+    label: 'Партнери',
+    to: '/#partners',
+    type: 'hash',
+  },
+  {
+    label: 'Про нас',
+    to: '/#about',
+    type: 'hash',
+  },
+  {
+    label: 'Контакти',
+    to: '/contacts',
+    type: 'route',
+  },
+] as const
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const location = useLocation()
+  useEffect(() => {
+    if (!isMenuOpen) {
+      return
+    }
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === 'Escape') {
+        setIsMenuOpen(false)
+      }
+    }
+
+    document.addEventListener('keydown', handleKeyDown)
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [isMenuOpen])
+  function isHashItemActive(to: string) {
+    const hash = to.split('#')[1]
+
+    return location.pathname === '/' && location.hash === `#${hash}`
+  }
 
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-background/90 backdrop-blur">
@@ -26,32 +65,44 @@ export function Header() {
           className="hidden items-center gap-5 min-[850px]:flex lg:gap-8"
           aria-label="Основна навігація"
         >
-          {navItems.map((item) => (
-            <NavLink
-              key={item.label}
-              to={item.to}
-              className={({ isActive }) =>
-                `
-                text-sm font-medium transition-colors
-                hover:text-primary
-                ${isActive ? 'text-primary' : 'text-muted'}
-                `
-              }
-            >
-              {item.label}
-            </NavLink>
-          ))}
+          {navItems.map((item) =>
+            item.type === 'hash' ? (
+              <Link
+                key={item.label}
+                to={item.to}
+                className={`
+        text-sm font-medium transition-colors
+        hover:text-primary
+        ${isHashItemActive(item.to) ? 'text-primary' : 'text-muted'}
+      `}
+              >
+                {item.label}
+              </Link>
+            ) : (
+              <NavLink
+                key={item.label}
+                to={item.to}
+                className={({ isActive }) => `
+        text-sm font-medium transition-colors
+        hover:text-primary
+        ${isActive ? 'text-primary' : 'text-muted'}
+      `}
+              >
+                {item.label}
+              </NavLink>
+            ),
+          )}
         </nav>
 
         <div className="hidden min-[850px]:block">
-          <VacanciesLink setIsMenuOpen={setIsMenuOpen} />
+          <FindJobLink setIsMenuOpen={setIsMenuOpen} />
         </div>
 
         <button
           type="button"
           className="
     inline-flex h-11 w-11 items-center justify-center
-    rounded-[10px]
+    rounded-control
     hover:bg-surface-soft
     min-[850px]:hidden
   "
@@ -103,28 +154,28 @@ function MobileMenu({
           </NavLink>
         ))}
 
-        <VacanciesLink setIsMenuOpen={setIsMenuOpen} additionalStyles="mt-3" />
+        <FindJobLink setIsMenuOpen={setIsMenuOpen} className="mt-3" />
       </div>
     </nav>
   )
 }
 
-function VacanciesLink({
+function FindJobLink({
   setIsMenuOpen,
-  additionalStyles = '',
+  className = '',
 }: {
   setIsMenuOpen: (v: boolean) => void
-  additionalStyles?: string
+  className?: string
 }) {
   return (
     <Link
       to="/vacancies"
       onClick={() => setIsMenuOpen(false)}
       className={`inline-flex h-11 items-center justify-center
-                rounded-[10px]
+                rounded-control
                 bg-primary px-5
                 font-medium text-white
-                hover:bg-primary-hover ${additionalStyles}`}
+                hover:bg-primary-hover ${className}`}
     >
       Знайти роботу
     </Link>

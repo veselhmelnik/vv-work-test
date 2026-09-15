@@ -1,47 +1,45 @@
+import { getCategoryLabel } from '../categories'
 import type { Vacancy } from '../types'
 
 type VacancyCardProps = {
   vacancy: Vacancy
-  compact?: boolean
-  onApply?: () => void
-  actionLabel?: string
+  onApply: () => void
 }
 
-export function VacancyCard({
-  vacancy,
-  compact = false,
-  onApply,
-  actionLabel,
-}: VacancyCardProps) {
-  const isInteractive = Boolean(onApply && !compact)
-
+export function VacancyCard({ vacancy, onApply }: VacancyCardProps) {
   return (
     <article
-      className={`relative rounded-2xl border border-border bg-surface transition-[transform, box-shadow, border-color] duration-200 ${
-        isInteractive
-          ? 'hover:-translate-y-1 hover:border-primary/20 hover:shadow-lg'
-          : ''
-      } ${compact ? 'p-5' : 'p-6'}`}
+      className="
+        relative rounded-2xl border border-border bg-surface p-6
+        transition-[transform,box-shadow,border-color]
+        duration-200
+        hover:-translate-y-1
+        hover:border-primary/20
+        hover:shadow-lg
+      "
     >
-      {isInteractive && (
-        <button
-          type="button"
-          onClick={onApply}
-          aria-label={`Подати заявку на вакансію ${vacancy.title}`}
-          className="absolute inset-0 z-10 cursor-pointer rounded-2xl"
-        />
-      )}
+      <button
+        type="button"
+        onClick={onApply}
+        aria-label={`Подати заявку на вакансію ${vacancy.title}`}
+        className="
+  absolute inset-0 z-10 cursor-pointer rounded-2xl
+  focus-visible:outline-2
+  focus-visible:outline-offset-2
+  focus-visible:outline-primary
+"
+      />
 
       <div className="relative z-0">
         <div className="flex items-start justify-between gap-4">
           <div>
             <p className="text-sm font-medium text-primary">
-              {vacancy.category}
+              {getCategoryLabel(vacancy.category)}
             </p>
 
-            <h3 className="mt-2 text-xl font-semibold tracking-tight">
+            <h2 className="mt-2 text-xl font-semibold tracking-tight">
               {vacancy.title}
-            </h3>
+            </h2>
           </div>
 
           <span className="rounded-full bg-surface-soft px-3 py-1">
@@ -52,9 +50,7 @@ export function VacancyCard({
         <div className="mt-4 space-y-1 text-sm text-muted">
           <p>{vacancy.company}</p>
 
-          <p>
-            {vacancy.city}, {vacancy.country}
-          </p>
+          <p>{vacancy.city}</p>
         </div>
 
         <div className="mt-6 flex items-end justify-between gap-4">
@@ -64,16 +60,9 @@ export function VacancyCard({
             <p className="mt-1 text-sm text-muted">{vacancy.employmentType}</p>
           </div>
 
-          {!compact &&
-            (onApply ? (
-              <span className="text-sm font-medium text-primary">
-                Подати заявку →
-              </span>
-            ) : actionLabel ? (
-              <span className="text-sm font-medium text-primary">
-                {actionLabel} →
-              </span>
-            ) : null)}
+          <span aria-hidden="true" className="text-sm font-medium text-primary">
+            Подати заявку →
+          </span>
         </div>
       </div>
     </article>

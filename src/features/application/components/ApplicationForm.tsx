@@ -62,7 +62,6 @@ export function ApplicationForm({ vacancy, titleId }: ApplicationFormProps) {
       })
 
       setStatus('success')
-      setValues(initialValues)
     } catch {
       setStatus('error')
     }
@@ -136,7 +135,7 @@ export function ApplicationForm({ vacancy, titleId }: ApplicationFormProps) {
               errors.name ? 'application-name-error' : undefined
             }
             className="
-              h-12 w-full rounded-[10px]
+              h-12 w-full rounded-control
               border border-border bg-surface px-4
               outline-none transition-colors
               focus:border-primary
@@ -169,7 +168,7 @@ export function ApplicationForm({ vacancy, titleId }: ApplicationFormProps) {
               errors.contact ? 'application-contact-error' : undefined
             }
             className="
-              h-12 w-full rounded-[10px]
+              h-12 w-full rounded-control
               border border-border bg-surface px-4
               outline-none transition-colors
               placeholder:text-muted
@@ -206,11 +205,11 @@ export function ApplicationForm({ vacancy, titleId }: ApplicationFormProps) {
             aria-invalid={Boolean(errors.message)}
             aria-describedby={
               errors.message
-                ? 'application-message-error'
+                ? 'application-message-error application-message-counter'
                 : 'application-message-counter'
             }
             className="
-              w-full resize-none rounded-[10px]
+              w-full resize-none rounded-control
               border border-border bg-surface p-4
               outline-none transition-colors
               focus:border-primary

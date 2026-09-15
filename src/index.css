@@ -18,6 +18,8 @@
   --color-error: #d44343;
 
   --color-dark: #181a22;
+
+  --radius-control: 10px;
 }
 
 @layer base {
@@ -72,6 +74,9 @@
   :focus-visible {
     outline: 3px solid color-mix(in srgb, var(--color-primary) 35%, transparent);
     outline-offset: 3px;
+  }
+  section[id] {
+    scroll-margin-top: 5rem;
   }
 }
 

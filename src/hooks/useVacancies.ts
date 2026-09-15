@@ -1,13 +1,6 @@
-import { useCallback } from 'react'
-
-import { getVacancies } from '../lib/api/api-vacancies'
+import { getVacancies } from '../lib/api/vacancies'
 import { useAsync } from './useAsync'
 
 export function useVacancies() {
-  const fetchVacancies = useCallback(
-    () => getVacancies(),
-    [],
-  )
-
-  return useAsync(fetchVacancies)
+  return useAsync(getVacancies)
 }

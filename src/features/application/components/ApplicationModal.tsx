@@ -11,11 +11,12 @@ export function ApplicationModal({ vacancy, onClose }: ApplicationModalProps) {
   const dialogRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    const previousActiveElement = document.activeElement as HTMLElement | null
+    const previousActiveElement =
+      document.activeElement instanceof HTMLElement
+        ? document.activeElement
+        : null
 
     const dialog = dialogRef.current
-
-    dialog?.focus()
 
     function handleKeyDown(event: KeyboardEvent) {
       if (event.key === 'Escape') {
@@ -27,16 +28,14 @@ export function ApplicationModal({ vacancy, onClose }: ApplicationModalProps) {
         return
       }
 
-      const focusableElements = dialog.querySelectorAll<HTMLElement>(
-        `
+      const focusableElements = dialog.querySelectorAll<HTMLElement>(`
         button:not([disabled]),
         input:not([disabled]),
         textarea:not([disabled]),
         select:not([disabled]),
         a[href],
         [tabindex]:not([tabindex="-1"])
-      `,
-      )
+      `)
 
       if (focusableElements.length === 0) {
         event.preventDefault()
@@ -77,10 +76,7 @@ export function ApplicationModal({ vacancy, onClose }: ApplicationModalProps) {
   }, [onClose])
 
   return (
-    <div
-      className="fixed inset-0 z-100 flex items-center justify-center p-4"
-      role="presentation"
-    >
+    <div className="fixed inset-0 z-100 flex items-center justify-center p-4">
       <button
         type="button"
         className="absolute inset-0 bg-black/40"

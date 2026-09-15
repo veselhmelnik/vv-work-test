@@ -21,16 +21,14 @@ export function Footer() {
           </div>
 
           <div>
-            <h2 className="text-sm font-semibold">
-              Кандидатам
-            </h2>
+            <h2 className="text-sm font-semibold">Кандидатам</h2>
 
             <nav
               className="mt-4 flex flex-col gap-3 text-sm text-white/60"
               aria-label="Навігація для кандидатів"
             >
               <Link
-                to="/#vacancies"
+                to="/#search"
                 className="transition-colors hover:text-white"
               >
                 Знайти роботу
@@ -53,9 +51,7 @@ export function Footer() {
           </div>
 
           <div>
-            <h2 className="text-sm font-semibold">
-              Роботодавцям
-            </h2>
+            <h2 className="text-sm font-semibold">Роботодавцям</h2>
 
             <nav
               className="mt-4 flex flex-col gap-3 text-sm text-white/60"
@@ -78,18 +74,13 @@ export function Footer() {
           </div>
 
           <div>
-            <h2 className="text-sm font-semibold">
-              Компанія
-            </h2>
+            <h2 className="text-sm font-semibold">Компанія</h2>
 
             <nav
               className="mt-4 flex flex-col gap-3 text-sm text-white/60"
               aria-label="Навігація компанії"
             >
-              <Link
-                to="/#about"
-                className="transition-colors hover:text-white"
-              >
+              <Link to="/#about" className="transition-colors hover:text-white">
                 Про нас
               </Link>
 
@@ -107,19 +98,8 @@ export function Footer() {
           <p>© {new Date().getFullYear()} VV Work</p>
 
           <div className="flex flex-wrap gap-x-6 gap-y-2">
-            <a
-              href="#privacy"
-              className="transition-colors hover:text-white"
-            >
-              Політика конфіденційності
-            </a>
-
-            <a
-              href="#terms"
-              className="transition-colors hover:text-white"
-            >
-              Умови використання
-            </a>
+            <p>Політика конфіденційності</p>
+            <p>Умови використання</p>
           </div>
         </div>
       </div>

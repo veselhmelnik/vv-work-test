@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
 
 import { useAsync } from './useAsync'
-import { getPartnerBySlug } from '../lib/api/api-partners'
+import { getPartnerBySlug } from '../lib/api/partners'
 
 export function usePartner(slug?: string) {
   const fetchPartner = useCallback(() => {

@@ -1,29 +1,37 @@
 import { useCallback, useEffect, useState } from 'react'
 
+type AsyncFunction<T> = () => Promise<T>
+
 type AsyncState<T> =
   | {
       status: 'loading'
       data: null
       error: null
+      source: AsyncFunction<T>
     }
   | {
       status: 'success'
       data: T
       error: null
+      source: AsyncFunction<T>
     }
   | {
       status: 'error'
       data: null
-      error: string
+      error: Error
+      source: AsyncFunction<T>
     }
 
 export function useAsync<T>(
-  asyncFunction: () => Promise<T>,
+  asyncFunction: AsyncFunction<T>,
 ) {
+  const [attempt, setAttempt] = useState(0)
+
   const [state, setState] = useState<AsyncState<T>>({
     status: 'loading',
     data: null,
     error: null,
+    source: asyncFunction,
   })
 
   useEffect(() => {
@@ -39,6 +47,7 @@ export function useAsync<T>(
           status: 'success',
           data,
           error: null,
+          source: asyncFunction,
         })
       })
       .catch((error: unknown) => {
@@ -51,47 +60,40 @@ export function useAsync<T>(
           data: null,
           error:
             error instanceof Error
-              ? error.message
-              : 'Something went wrong',
+              ? error
+              : new Error('Something went wrong'),
+          source: asyncFunction,
         })
       })
 
     return () => {
       cancelled = true
     }
-  }, [asyncFunction])
+  }, [asyncFunction, attempt])
 
   const retry = useCallback(() => {
     setState({
       status: 'loading',
       data: null,
       error: null,
+      source: asyncFunction,
     })
 
-    asyncFunction()
-      .then((data) => {
-        setState({
-          status: 'success',
-          data,
-          error: null,
-        })
-      })
-      .catch((error: unknown) => {
-        setState({
-          status: 'error',
-          data: null,
-          error:
-            error instanceof Error
-              ? error.message
-              : 'Something went wrong',
-        })
-      })
+    setAttempt((current) => current + 1)
   }, [asyncFunction])
 
+  const isCurrentSource =
+    state.source === asyncFunction
+
+  const status = isCurrentSource
+    ? state.status
+    : 'loading'
+
   return {
-    data: state.data,
-    error: state.error,
-    isLoading: state.status === 'loading',
+    status,
+    data: isCurrentSource ? state.data : null,
+    error: isCurrentSource ? state.error : null,
+    isLoading: status === 'loading',
     retry,
   }
 }

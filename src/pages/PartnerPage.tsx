@@ -1,67 +1,54 @@
-import { useMemo, useState } from 'react'
-import { useParams, useSearchParams } from 'react-router-dom'
-
+import { useCallback, useMemo, useState } from 'react'
+import { useParams } from 'react-router-dom'
 import { PageLayout } from '../components/layout/PageLayout'
 import { ErrorState } from '../components/ui/ErrorState'
-import { PartnerSkeleton } from '../features/partners/components/PartnerSkeleton'
-import { VacancyCard } from '../features/vacancies/components/VacancyCard'
 import { VacancyFilters } from '../features/vacancies/components/VacancyFilters'
 import type { Vacancy } from '../features/vacancies/types'
-import { useDebounce } from '../hooks/useDebounce'
 import { usePartner } from '../hooks/usePartner'
 import { ApplicationModal } from '../features/application/components/ApplicationModal'
+import { formatVacanciesCount } from '../lib/pluralize'
+import { NotFoundError } from '../lib/api/partners'
+import { useVacancyFilters } from '../hooks/useVacancyFilters'
+import { filterVacancies } from '../features/vacancies/filterVacancies'
+import { VacancyList } from '../features/vacancies/components/VacancyList'
+import { VacanciesSkeleton } from '../features/vacancies/components/VacanciesSkeleton'
 
 export function PartnerPage() {
   const { slug } = useParams<{ slug: string }>()
+  const { search, category, debouncedSearch, setSearch, setCategory } =
+    useVacancyFilters()
 
-  const [searchParams, setSearchParams] = useSearchParams()
-
-  const [search, setSearch] = useState('')
   const [selectedVacancy, setSelectedVacancy] = useState<Vacancy | null>(null)
-
-  const category = searchParams.get('category') ?? ''
-
-  const debouncedSearch = useDebounce(search, 300)
+  const handleCloseApplication = useCallback(() => {
+    setSelectedVacancy(null)
+  }, [])
 
   const { data: partner, isLoading, error, retry } = usePartner(slug)
-
-  function handleCategoryChange(value: string) {
-    setSearchParams((params) => {
-      const nextParams = new URLSearchParams(params)
-
-      if (value) {
-        nextParams.set('category', value)
-      } else {
-        nextParams.delete('category')
-      }
-
-      return nextParams
-    })
-  }
 
   const filteredVacancies = useMemo(() => {
     if (!partner) {
       return []
     }
 
-    const normalizedSearch = debouncedSearch.trim().toLowerCase()
-
-    return partner.vacancies.filter((vacancy) => {
-      const matchesSearch =
-        normalizedSearch === '' ||
-        vacancy.title.toLowerCase().includes(normalizedSearch)
-
-      const matchesCategory = category === '' || vacancy.category === category
-
-      return matchesSearch && matchesCategory
+    return filterVacancies(partner.vacancies, {
+      search: debouncedSearch,
+      category,
     })
   }, [partner, debouncedSearch, category])
 
   return (
     <PageLayout>
-      <section id='partners' className="container-page py-16">
+      <section className="container-page py-16">
         {isLoading ? (
-          <PartnerSkeleton />
+          <VacanciesSkeleton />
+        ) : error instanceof NotFoundError ? (
+          <div className="py-16 text-center">
+            <h1 className="text-3xl font-bold">Партнера не знайдено</h1>
+
+            <p className="mt-3 text-muted">
+              Перевірте адресу або поверніться на головну.
+            </p>
+          </div>
         ) : error ? (
           <ErrorState onRetry={retry} />
         ) : partner ? (
@@ -80,8 +67,8 @@ export function PartnerPage() {
               <div className="mb-6">
                 <h2 className="text-3xl font-bold tracking-tight">Вакансії</h2>
 
-                <p className="mt-2 text-muted">
-                  {filteredVacancies.length} доступних вакансій
+                <p className="mt-2 text-muted" aria-live="polite">
+                  {formatVacanciesCount(filteredVacancies.length)}
                 </p>
               </div>
 
@@ -89,36 +76,16 @@ export function PartnerPage() {
                 search={search}
                 category={category}
                 onSearchChange={setSearch}
-                onCategoryChange={handleCategoryChange}
+                onCategoryChange={setCategory}
               />
 
-              {filteredVacancies.length > 0 ? (
-                <div className="mt-8 grid gap-4">
-                  {filteredVacancies.map((vacancy) => (
-                    <VacancyCard
-                      key={vacancy.id}
-                      vacancy={vacancy}
-                      onApply={() => setSelectedVacancy(vacancy)}
-                    />
-                  ))}
-                </div>
-              ) : (
-                <div className="mt-8 rounded-2xl border border-border bg-surface p-8 text-center">
-                  <h3 className="text-lg font-semibold">
-                    Вакансій не знайдено
-                  </h3>
-
-                  <p className="mt-2 text-muted">
-                    Спробуйте змінити пошуковий запит або категорію.
-                  </p>
-                </div>
-              )}
+              <VacancyList vacancies={filteredVacancies} hasActiveFilters={Boolean(search.trim() || category)}/>
             </div>
 
             {selectedVacancy && (
               <ApplicationModal
                 vacancy={selectedVacancy}
-                onClose={() => setSelectedVacancy(null)}
+                onClose={handleCloseApplication}
               />
             )}
           </>

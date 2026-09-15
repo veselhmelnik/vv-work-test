@@ -1,10 +1,19 @@
 import { useState } from 'react'
-import { Button } from './ui/Button'
-import { jobCategories } from '../mocks/mock-categories'
 import { useNavigate } from 'react-router-dom'
-import { HeroVacanciesPreview } from './HeroVacanciesPreview'
+import { Button } from '../ui/Button'
+import { jobCategories } from '../../features/vacancies/categories'
+import { HeroVacanciesPreview } from '../../features/vacancies/components/HeroVacanciesPreview'
 
 export function Hero() {
+  const fieldClassName = `
+  h-12 w-full rounded-control
+  border border-border
+  bg-surface px-4
+  text-foreground
+  outline-none
+  transition-colors
+  focus:border-primary
+`
   const [search, setSearch] = useState('')
   const [category, setCategory] = useState('')
   const navigate = useNavigate()
@@ -28,7 +37,7 @@ export function Hero() {
   }
 
   return (
-    <section id="vacancies" className="container-page py-8 md:py-16 lg:py-20">
+    <section id="search" className="container-page py-8 md:py-16 lg:py-20">
       <div className="grid items-center gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
         <div>
           <p className="mb-4 text-sm font-semibold uppercase tracking-[0.18em] text-primary">
@@ -56,16 +65,7 @@ export function Hero() {
                   value={search}
                   onChange={(event) => setSearch(event.target.value)}
                   placeholder="Посада або ключове слово"
-                  className="
-          h-12 w-full rounded-[10px]
-          border border-border
-          bg-surface px-4
-          text-foreground
-          outline-none
-          transition
-          placeholder:text-muted
-          focus:border-primary
-        "
+                  className={`${fieldClassName} placeholder:text-muted`}
                 />
               </div>
 
@@ -83,15 +83,7 @@ export function Hero() {
                 id="job-category"
                 value={category}
                 onChange={(event) => setCategory(event.target.value)}
-                className="
-        h-12 w-full rounded-[10px]
-        border border-border
-        bg-surface px-4
-        text-foreground
-        outline-none
-        transition
-        focus:border-primary
-      "
+                className={fieldClassName}
               >
                 <option value="">Всі категорії</option>
 

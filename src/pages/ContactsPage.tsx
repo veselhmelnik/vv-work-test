@@ -20,7 +20,7 @@ export function ContactsPage() {
             </p>
           </div>
 
-          <div className="grid gap-4 sm:grid-cols-2">
+          <div className="grid gap-4 md:grid-cols-2">
             <ContactCard
               title="Email"
               value="hello@vvwork.example"
@@ -40,11 +40,11 @@ export function ContactsPage() {
             />
 
             <div className="rounded-2xl border border-border bg-surface p-6">
-              <p className="text-sm font-medium text-primary">
+              <h2 className="text-sm font-medium text-primary">
                 Графік відповіді
-              </p>
+              </h2>
 
-              <h2 className="mt-2 text-lg font-semibold">Пн–Пт, 09:00–18:00</h2>
+              <p className="mt-2 text-lg font-semibold">Пн–Пт, 09:00–18:00</p>
 
               <p className="mt-2 text-sm leading-6 text-muted">
                 Зазвичай відповідаємо протягом одного робочого дня.
@@ -72,7 +72,7 @@ export function ContactsPage() {
             href="mailto:partners@vvwork.example"
             className="
         mt-6 inline-flex h-12 items-center justify-center
-        rounded-[10px] bg-primary px-6
+        rounded-control bg-primary px-6
         font-medium text-white
         hover:bg-primary-hover
       "
@@ -105,18 +105,20 @@ function ContactCard({ title, value, href }: ContactCardProps) {
         hover:shadow-lg
       "
     >
-      <p className="text-sm font-medium text-primary">{title}</p>
+      <h2 className="text-sm font-medium text-primary">{title}</h2>
 
-      <div className="mt-2 flex items-center justify-between gap-4">
-        <h2 className="text-lg font-semibold">{value}</h2>
+      <div className="mt-2 flex items-start justify-between gap-4">
+        <p className="min-w-0 wrap-break-word text-base font-semibold md:text-lg">
+          {value}
+        </p>
 
         <span
           aria-hidden="true"
           className="
-            text-muted transition-transform
-            group-hover:translate-x-1
-            group-hover:text-primary
-          "
+      shrink-0 text-muted transition-transform
+      group-hover:translate-x-1
+      group-hover:text-primary
+    "
         >
           →
         </span>

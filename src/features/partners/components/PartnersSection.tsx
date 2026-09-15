@@ -2,6 +2,9 @@ import { Link } from 'react-router-dom'
 
 import { ErrorState } from '../../../components/ui/ErrorState'
 import { usePartners } from '../../../hooks/usePartners'
+import { formatVacanciesCount } from '../../../lib/pluralize'
+import { SectionHeader } from '../../../components/SectionHeader'
+import { PartnersGridSkeleton } from './PartnersGridSkeleton'
 
 export function PartnersSection() {
   const {
@@ -16,25 +19,17 @@ export function PartnersSection() {
       id="partners"
       className="container-page py-16 md:py-20 lg:py-24"
     >
-      <div className="max-w-2xl">
-        <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary">
-          Партнери
-        </p>
-
-        <h2 className="mt-3 text-3xl font-bold tracking-tight md:text-4xl">
-          Перевірені роботодавці
-        </h2>
-
-        <p className="mt-4 text-lg leading-8 text-muted">
-          Перегляньте вакансії наших партнерів у різних країнах Європи.
-        </p>
-      </div>
+      <SectionHeader
+  eyebrow="Партнери"
+  title="Перевірені роботодавці"
+  description="Перегляньте вакансії наших партнерів у різних країнах Європи."
+/>
 
       {isLoading ? (
-        <PartnersSkeleton />
+        <PartnersGridSkeleton />
       ) : error ? (
         <div className="mt-10">
-          <ErrorState onRetry={retry} />
+          <ErrorState onRetry={retry} title="Не вдалося завантажити партнерів"/>
         </div>
       ) : partners ? (
         <div className="mt-10 grid gap-4 md:grid-cols-2">
@@ -80,7 +75,7 @@ export function PartnersSection() {
               </p>
 
               <p className="mt-5 text-sm font-medium text-primary">
-                {partner.vacancies.length} вакансій
+                {formatVacanciesCount(partner.vacancies.length)}
               </p>
             </Link>
           ))}
@@ -90,26 +85,3 @@ export function PartnersSection() {
   )
 }
 
-function PartnersSkeleton() {
-  return (
-    <div
-      className="mt-10 grid gap-4 md:grid-cols-2"
-      aria-hidden="true"
-    >
-      {Array.from({ length: 4 }).map((_, index) => (
-        <div
-          key={index}
-          className="animate-pulse rounded-2xl border border-border bg-surface p-6"
-        >
-          <div className="h-6 w-40 rounded bg-surface-soft" />
-          <div className="mt-3 h-4 w-24 rounded bg-surface-soft" />
-
-          <div className="mt-6 h-4 w-full rounded bg-surface-soft" />
-          <div className="mt-2 h-4 w-2/3 rounded bg-surface-soft" />
-
-          <div className="mt-6 h-4 w-20 rounded bg-surface-soft" />
-        </div>
-      ))}
-    </div>
-  )
-}

@@ -1,6 +1,6 @@
 import { Skeleton } from "../../../components/ui/Skeleton";
 
-export function PartnerSkeleton() {
+export function VacanciesSkeleton() {
     return (
         <div className="space-y-4">
             <Skeleton className="h-4 w-32"/>

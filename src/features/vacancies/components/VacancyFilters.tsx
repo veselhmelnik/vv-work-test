@@ -1,6 +1,6 @@
-import { jobCategories } from '../../../mocks/mock-categories'
+import { jobCategories } from "../categories"
 
-type VacancyFilterProps = {
+type VacancyFiltersProps = {
   search: string
   category: string
   onSearchChange: (value: string) => void
@@ -12,7 +12,7 @@ export function VacancyFilters({
   category,
   onSearchChange,
   onCategoryChange,
-}: VacancyFilterProps) {
+}: VacancyFiltersProps) {
   return (
     <div className="grid gap-3 md:grid-cols-[1fr_260px]">
       <div>
@@ -26,7 +26,7 @@ export function VacancyFilters({
           value={search}
           onChange={(e) => onSearchChange(e.target.value)}
           placeholder="Пошук за назвою вакансії"
-          className="h-12 w-full rounded-[10px] border border-border bg-surface px-4 outline-none transition-colors placeholder:text-muted focus:border-primary"
+          className="h-12 w-full rounded-control border border-border bg-surface px-4 outline-none transition-colors placeholder:text-muted focus:border-primary"
         />
       </div>
 
@@ -39,7 +39,7 @@ export function VacancyFilters({
           id="vacancy-category"
           onChange={(e) => onCategoryChange(e.target.value)}
           value={category}
-          className="h-12 w-full rounded-[10px] border border-border bg-surface px-4 outline-none transition-colors focus:border-primary"
+          className="h-12 w-full rounded-control border border-border bg-surface px-4 outline-none transition-colors focus:border-primary"
         >
           <option value="">Всі категорії</option>
           {jobCategories.map((category) => (
