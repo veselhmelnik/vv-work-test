@@ -17,7 +17,7 @@ export function PartnersSection() {
   return (
     <section
       id="partners"
-      className="container-page py-16 md:py-20 lg:py-24"
+      className="container-page py-8 md:py-12"
     >
       <SectionHeader
   eyebrow="Партнери"

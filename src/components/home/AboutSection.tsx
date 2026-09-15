@@ -2,7 +2,7 @@ import { SectionHeader } from "../SectionHeader"
 
 export function AboutSection() {
   return (
-    <section id="about" className="container-page py-16 md:py-20 lg:py-24">
+    <section id="about" className="container-page py-8 md:py-12">
       <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
         <SectionHeader
           eyebrow="Про VV Work"

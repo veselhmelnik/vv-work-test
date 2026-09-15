@@ -4,7 +4,7 @@ export function EmployerSection() {
   return (
     <section
       id="employers"
-      className="container-page scroll-mt-20 py-16 md:py-20 lg:py-24"
+      className="container-page scroll-mt-20 py-8 md:py-12"
     >
       <div className="rounded-3xl border border-border bg-surface p-6 shadow-sm md:p-10 lg:p-12">
         <div className="grid items-center gap-10 lg:grid-cols-[0.95fr_1.05fr] lg:gap-16">

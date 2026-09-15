@@ -4,7 +4,7 @@ import { jobCategories } from '../../features/vacancies/categories'
 
 export function PopularCategories() {
   return (
-    <section id="categories" className="container-page py-8 md:py-16 lg:py-20">
+    <section id="categories" className="container-page py-8 md:py-12">
       <SectionHeader
         eyebrow="Популярні напрямки"
         title="Знайдіть роботу за категорією"
