@@ -3,7 +3,10 @@ import { useState } from 'react'
 import { Button } from '../../../components/ui/Button'
 import { submitApplication } from '../../../lib/api/applications'
 import type { Vacancy } from '../../vacancies/types'
-import type { ApplicationFormErrors, ApplicationFormValues } from '../types'
+import type {
+  ApplicationFormErrors,
+  ApplicationFormValues,
+} from '../types'
 import { validateApplication } from '../validation'
 
 const initialValues: ApplicationFormValues = {
@@ -12,21 +15,34 @@ const initialValues: ApplicationFormValues = {
   message: '',
 }
 
-type FormStatus = 'idle' | 'optimistic-success' | 'success' | 'error'
+type FormStatus =
+  | 'idle'
+  | 'submitting'
+  | 'success'
+  | 'error'
 
 type ApplicationFormProps = {
   vacancy: Vacancy
   titleId?: string
 }
 
-export function ApplicationForm({ vacancy, titleId }: ApplicationFormProps) {
-  const [values, setValues] = useState<ApplicationFormValues>(initialValues)
+export function ApplicationForm({
+  vacancy,
+  titleId,
+}: ApplicationFormProps) {
+  const [values, setValues] =
+    useState<ApplicationFormValues>(initialValues)
 
-  const [status, setStatus] = useState<FormStatus>('idle')
+  const [errors, setErrors] =
+    useState<ApplicationFormErrors>({})
 
-  const [errors, setErrors] = useState<ApplicationFormErrors>({})
+  const [status, setStatus] =
+    useState<FormStatus>('idle')
 
-  function updateField(field: keyof ApplicationFormValues, value: string) {
+  function updateField(
+    field: keyof ApplicationFormValues,
+    value: string,
+  ) {
     setValues((current) => ({
       ...current,
       [field]: value,
@@ -42,7 +58,9 @@ export function ApplicationForm({ vacancy, titleId }: ApplicationFormProps) {
     }
   }
 
-  async function handleSubmit(event: React.SubmitEvent<HTMLFormElement>) {
+  async function handleSubmit(
+    event: React.SubmitEvent<HTMLFormElement>,
+  ) {
     event.preventDefault()
 
     const nextErrors = validateApplication(values)
@@ -53,7 +71,7 @@ export function ApplicationForm({ vacancy, titleId }: ApplicationFormProps) {
     }
 
     setErrors({})
-    setStatus('optimistic-success')
+    setStatus('submitting')
 
     try {
       await submitApplication({
@@ -67,9 +85,50 @@ export function ApplicationForm({ vacancy, titleId }: ApplicationFormProps) {
     }
   }
 
-  if (status === 'optimistic-success' || status === 'success') {
+  if (status === 'submitting') {
     return (
-      <div className="p-8 text-center" role="status" aria-live="polite">
+      <div
+        className="p-8 text-center"
+        role="status"
+        aria-live="polite"
+      >
+        <div
+          className="
+            mx-auto flex size-12
+            items-center justify-center
+            rounded-full bg-primary-soft
+            text-xl text-primary
+          "
+          aria-hidden="true"
+        >
+          …
+        </div>
+
+        <h2
+          id={titleId}
+          className="mt-5 text-2xl font-bold"
+        >
+          Надсилаємо заявку
+        </h2>
+
+        <p className="mt-2 text-muted">
+          Передаємо вашу заявку на вакансію{' '}
+          <span className="font-medium text-foreground">
+            {vacancy.title}
+          </span>
+          .
+        </p>
+      </div>
+    )
+  }
+
+  if (status === 'success') {
+    return (
+      <div
+        className="p-8 text-center"
+        role="status"
+        aria-live="polite"
+      >
         <div
           className="
             mx-auto flex size-12
@@ -82,30 +141,39 @@ export function ApplicationForm({ vacancy, titleId }: ApplicationFormProps) {
           ✓
         </div>
 
-        <h2 id={titleId} className="mt-5 text-2xl font-bold">
+        <h2
+          id={titleId}
+          className="mt-5 text-2xl font-bold"
+        >
           Заявку надіслано
         </h2>
 
         <p className="mt-2 text-muted">
           Ми передали вашу заявку на вакансію{' '}
-          <span className="font-medium text-foreground">{vacancy.title}</span>.
+          <span className="font-medium text-foreground">
+            {vacancy.title}
+          </span>
+          .
         </p>
-
-        {status === 'optimistic-success' && (
-          <p className="mt-3 text-sm text-muted">
-            Підтверджуємо відправлення...
-          </p>
-        )}
       </div>
     )
   }
 
   return (
-    <form onSubmit={handleSubmit} noValidate className="p-6 md:p-8">
+    <form
+      onSubmit={handleSubmit}
+      noValidate
+      className="p-6 md:p-8"
+    >
       <div>
-        <p className="text-sm font-medium text-primary">Заявка на вакансію</p>
+        <p className="text-sm font-medium text-primary">
+          Заявка на вакансію
+        </p>
 
-        <h2 id={titleId} className="mt-2 pr-12 text-2xl font-bold">
+        <h2
+          id={titleId}
+          className="mt-2 pr-12 text-2xl font-bold"
+        >
           {vacancy.title}
         </h2>
 
@@ -129,10 +197,14 @@ export function ApplicationForm({ vacancy, titleId }: ApplicationFormProps) {
             name="name"
             autoComplete="name"
             value={values.name}
-            onChange={(event) => updateField('name', event.target.value)}
+            onChange={(event) =>
+              updateField('name', event.target.value)
+            }
             aria-invalid={Boolean(errors.name)}
             aria-describedby={
-              errors.name ? 'application-name-error' : undefined
+              errors.name
+                ? 'application-name-error'
+                : undefined
             }
             className="
               h-12 w-full rounded-control
@@ -143,7 +215,10 @@ export function ApplicationForm({ vacancy, titleId }: ApplicationFormProps) {
           />
 
           {errors.name && (
-            <p id="application-name-error" className="mt-2 text-sm text-error">
+            <p
+              id="application-name-error"
+              className="mt-2 text-sm text-error"
+            >
               {errors.name}
             </p>
           )}
@@ -161,11 +236,15 @@ export function ApplicationForm({ vacancy, titleId }: ApplicationFormProps) {
             id="application-contact"
             name="contact"
             value={values.contact}
-            onChange={(event) => updateField('contact', event.target.value)}
+            onChange={(event) =>
+              updateField('contact', event.target.value)
+            }
             placeholder="+380... або @username"
             aria-invalid={Boolean(errors.contact)}
             aria-describedby={
-              errors.contact ? 'application-contact-error' : undefined
+              errors.contact
+                ? 'application-contact-error'
+                : undefined
             }
             className="
               h-12 w-full rounded-control
@@ -192,7 +271,9 @@ export function ApplicationForm({ vacancy, titleId }: ApplicationFormProps) {
             className="mb-2 block text-sm font-medium"
           >
             Повідомлення
-            <span className="ml-1 text-muted">(необов’язково)</span>
+            <span className="ml-1 text-muted">
+              (необов’язково)
+            </span>
           </label>
 
           <textarea
@@ -201,7 +282,9 @@ export function ApplicationForm({ vacancy, titleId }: ApplicationFormProps) {
             rows={5}
             maxLength={501}
             value={values.message}
-            onChange={(event) => updateField('message', event.target.value)}
+            onChange={(event) =>
+              updateField('message', event.target.value)
+            }
             aria-invalid={Boolean(errors.message)}
             aria-describedby={
               errors.message
@@ -219,13 +302,19 @@ export function ApplicationForm({ vacancy, titleId }: ApplicationFormProps) {
           <div className="mt-2 flex justify-between gap-4 text-sm">
             <div>
               {errors.message && (
-                <p id="application-message-error" className="text-error">
+                <p
+                  id="application-message-error"
+                  className="text-error"
+                >
                   {errors.message}
                 </p>
               )}
             </div>
 
-            <span id="application-message-counter" className="text-muted">
+            <span
+              id="application-message-counter"
+              className="text-muted"
+            >
               {values.message.length}/500
             </span>
           </div>
@@ -233,12 +322,18 @@ export function ApplicationForm({ vacancy, titleId }: ApplicationFormProps) {
       </div>
 
       {status === 'error' && (
-        <p className="mt-4 text-sm text-error" role="alert">
+        <p
+          className="mt-4 text-sm text-error"
+          role="alert"
+        >
           Не вдалося надіслати заявку. Спробуйте ще раз.
         </p>
       )}
 
-      <Button type="submit" className="mt-6 w-full">
+      <Button
+        type="submit"
+        className="mt-6 w-full"
+      >
         Надіслати заявку
       </Button>
     </form>
