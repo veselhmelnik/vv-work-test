@@ -16,7 +16,6 @@
 - React Router
 - Vitest
 - React Testing Library
-- user-event
 - jest-axe
 
 Проєкт реалізований без сторонніх бібліотек
@@ -213,7 +212,7 @@ Lighthouse запускався на production build.
 | Performance    |    99 |
 | Accessibility  |   100 |
 | Best Practices |   100 |
-| SEO            |    82 |
+| SEO            |    90 |
 
 ### Screenshot
 
